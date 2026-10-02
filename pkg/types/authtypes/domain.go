@@ -14,6 +14,11 @@ import (
 
 const (
 	authDomainNameRegexString string = `^([a-zA-Z0-9]{1}[a-zA-Z0-9-]{0,62}){1}(\.[a-zA-Z0-9]{1}[a-zA-Z0-9-]{0,62})*?$`
+
+	// WildcardAuthDomainName matches logins from any email domain in an org, as a
+	// fallback when no domain-specific AuthDomain exists. Lets an IdP (e.g. an
+	// existing Keycloak realm) be the sole access gate instead of a verified domain.
+	WildcardAuthDomainName string = "*"
 )
 
 var (
@@ -165,7 +170,7 @@ func (typ *PostableAuthDomain) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	if !authDomainNameRegex.MatchString(temp.Name) {
+	if temp.Name != WildcardAuthDomainName && !authDomainNameRegex.MatchString(temp.Name) {
 		return errors.Newf(errors.TypeInvalidInput, ErrCodeAuthDomainInvalidName, "invalid domain name %s", temp.Name)
 	}
 

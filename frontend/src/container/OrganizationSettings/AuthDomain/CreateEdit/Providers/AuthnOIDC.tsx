@@ -54,7 +54,7 @@ function ConfigureOIDCAuthnProvider({
 					<div className="authn-provider__field-group">
 						<label className="authn-provider__label" htmlFor="oidc-domain">
 							Domain
-							<Tooltip title="The email domain for users who should use SSO (e.g., `example.com` for users with `@example.com` emails)">
+							<Tooltip title="The email domain for users who should use SSO (e.g., `example.com` for users with `@example.com` emails). Use `*` to let any email domain through this IdP — useful when the identity provider itself should be the access gate.">
 								<CircleHelp size={14} color={Style.L3_FOREGROUND} cursor="help" />
 							</Tooltip>
 						</label>

@@ -211,6 +211,13 @@ func (module *module) getOrgSessionContext(ctx context.Context, org *types.Organ
 		return nil, err
 	}
 
+	if authDomain == nil && name != authtypes.WildcardAuthDomainName {
+		authDomain, err = module.authDomain.GetByNameAndOrgID(ctx, authtypes.WildcardAuthDomainName, org.ID)
+		if err != nil && !errors.Ast(err, errors.TypeNotFound) {
+			return nil, err
+		}
+	}
+
 	if authDomain == nil {
 		return authtypes.NewOrgSessionContext(org.ID, org.Name).AddPasswordAuthNSupport(authtypes.AuthNProviderEmailPassword), nil
 	}
