@@ -29,6 +29,7 @@ def create_signoz(
     cache_key: str = "signoz",
     env_overrides: dict | None = None,
     tls: types.TLS | None = None,
+    edition: str = "enterprise",
 ) -> types.SigNoz:
     """
     Factory function for creating a SigNoz container.
@@ -48,13 +49,20 @@ def create_signoz(
             arch = "amd64"
 
         # Build the image
-        dockerfile_path = "cmd/enterprise/Dockerfile.integration"
-        if with_web:
-            dockerfile_path = "cmd/enterprise/Dockerfile.with-web.integration"
+        if edition == "community":
+            dockerfile_path = "cmd/community/Dockerfile.integration"
+        else:
+            dockerfile_path = "cmd/enterprise/Dockerfile.integration"
+            if with_web:
+                dockerfile_path = "cmd/enterprise/Dockerfile.with-web.integration"
 
         # Docker build context is the repo root — one up from pytest's
         # rootdir (tests/).
         context = pytestconfig.rootpath.parent
+
+        build_args = [f"TARGETARCH={arch}"]
+        if edition != "community":
+            build_args.append(f"ZEUSURL={zeus.container_configs['8080'].base()}")
 
         # The docker CLI is required: the Dockerfiles use BuildKit cache
         # mounts, which docker-py does not support.
@@ -66,10 +74,7 @@ def create_signoz(
                 str(context / dockerfile_path),
                 "--tag",
                 "signoz:integration",
-                "--build-arg",
-                f"TARGETARCH={arch}",
-                "--build-arg",
-                f"ZEUSURL={zeus.container_configs['8080'].base()}",
+                *[arg for pair in build_args for arg in ("--build-arg", pair)],
                 str(context),
             ],
             check=True,
