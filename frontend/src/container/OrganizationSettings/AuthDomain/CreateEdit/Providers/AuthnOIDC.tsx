@@ -186,7 +186,8 @@ function ConfigureOIDCAuthnProvider({
 					</div>
 					<div className="authn-provider__callout-wrapper">
 						<Callout type="warning" size="small" showIcon className="callout">
-							OIDC won&apos;t be enabled unless you enter all the attributes above
+							Issuer, Client ID, and Client Secret are required. Issuer Alias and the
+							checkboxes below are optional.
 						</Callout>
 					</div>
 				</div>
