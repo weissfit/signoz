@@ -13,7 +13,10 @@ interface AuthNProvider {
 	enabled: boolean;
 }
 
-function getAuthNProviders(samlEnabled: boolean): AuthNProvider[] {
+function getAuthNProviders(
+	samlEnabled: boolean,
+	oidcEnabled: boolean,
+): AuthNProvider[] {
 	return [
 		{
 			key: AuthtypesAuthNProviderDTO.google,
@@ -37,7 +40,7 @@ function getAuthNProviders(samlEnabled: boolean): AuthNProvider[] {
 			description:
 				'Authenticate using OpenID Connect providers like Azure, Active Directory, Okta, or other OIDC compliant solutions',
 			icon: <Key size={37} />,
-			enabled: samlEnabled,
+			enabled: oidcEnabled,
 		},
 	];
 }
@@ -45,13 +48,15 @@ function getAuthNProviders(samlEnabled: boolean): AuthNProvider[] {
 function AuthnProviderSelector({
 	setAuthnProvider,
 	samlEnabled,
+	oidcEnabled,
 }: {
 	setAuthnProvider: React.Dispatch<
 		React.SetStateAction<AuthtypesAuthNProviderDTO | ''>
 	>;
 	samlEnabled: boolean;
+	oidcEnabled: boolean;
 }): JSX.Element {
-	const authnProviders = getAuthNProviders(samlEnabled);
+	const authnProviders = getAuthNProviders(samlEnabled, oidcEnabled);
 	return (
 		<div className="authn-provider-selector">
 			<section className="header">

@@ -77,6 +77,9 @@ function CreateOrEdit(props: CreateOrEditProps): JSX.Element {
 	);
 	const samlEnabled =
 		featureFlags?.find((flag) => flag.name === FeatureKeys.SSO)?.active || false;
+	// OIDC callback auth is always registered backend-side (community's generic
+	// provider, or enterprise's licensed one), independent of the SSO license feature.
+	const oidcEnabled = true;
 
 	const { mutate: createAuthDomain, isLoading: isCreating } =
 		useCreateAuthDomain<AxiosError<RenderErrorResponseDTO>>();
@@ -183,6 +186,7 @@ function CreateOrEdit(props: CreateOrEditProps): JSX.Element {
 					<AuthnProviderSelector
 						setAuthnProvider={setAuthnProvider}
 						samlEnabled={samlEnabled}
+						oidcEnabled={oidcEnabled}
 					/>
 				)}
 				{authnProvider !== '' && (
